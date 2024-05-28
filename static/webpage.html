@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Translator App</title>
+    <!-- Include the pinyin-pro library from a CDN -->
+    <script src="https://cdn.jsdelivr.net/gh/zh-lx/pinyin-pro@latest/dist/pinyin-pro.js"></script>
+    <title>Translator App w/ Cloudflare AI</title>
     <style>
         body {
             font-family: "Comic Sans MS", cursive, sans-serif;
@@ -92,22 +94,50 @@
     </div>
 
     <script>
-        //text
-        document.getElementById('translateButton').onclick = async function() {
-            const text = document.getElementById('textInput').value;
-            const targetLang = document.getElementById('langInput').value;
-            if (text.trim() === "" || targetLang.trim() === "") {
-                alert("Please enter both text and target language.");
-                return;
-            }
-            const response = await fetch('/translate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text, targetLang })
-            });
-            const res = await response.json();
-            document.getElementById('translationResult').innerText = JSON.stringify(res);
-        };
+        var { pinyin } = pinyinPro;
+        function containsChineseCharacters(text) {
+      // Regular expression to match Chinese characters
+      const chineseCharacterRegex = /[\u4e00-\u9fff]/;
+      // Test the string against the regular expression
+      return chineseCharacterRegex.test(text);
+    }
+
+    function convertToPinyin(chineseText) {
+      return pinyin(chineseText);
+    }
+
+    document.getElementById('translateButton').onclick = async function() {
+      const text = document.getElementById('textInput').value;
+      const targetLang = document.getElementById('langInput').value;
+      if (text.trim() === "" || targetLang.trim() === "") {
+        alert("Please enter both text and target language.");
+        return;
+      }
+
+      try {
+        const response = await fetch('/translate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, targetLang })
+        });
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok.');
+        }
+
+        const res = await response.json();
+        let str_res = JSON.stringify(res);
+
+        if (containsChineseCharacters(str_res)) {
+          str_res = convertToPinyin(str_res);
+        }
+
+        document.getElementById('translationResult').innerText = str_res;
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('translationResult').innerText = 'Error: ' + error.message;
+      }
+    };
 
         document.getElementById('recordButton').onclick = function() {
             startRecording();
