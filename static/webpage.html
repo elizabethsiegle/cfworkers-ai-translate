@@ -7,52 +7,85 @@
     <title>Translator App</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            background-color: #199360;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
             margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
         }
         .container {
-            max-width: 600px;
-            margin: auto;
-            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80%;
+            max-width: 500px;
             padding: 20px;
+            background-color: #fff;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        textarea {
+        textarea, input {
             width: 100%;
-            height: 100px;
-            margin-bottom: 20px;
             padding: 10px;
-            font-size: 16px;
+            margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
+            font-size: 20px;
+        }
+        textarea {
+            height: 100px;
+            resize: none;
         }
         button {
             padding: 10px 20px;
-            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
             border: none;
             border-radius: 5px;
-            background-color: #007bff;
-            color: white;
+            font-size: 20px;
             cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
         }
-        button:disabled {
-            background-color: #aaa;
+        button:hover {
+            background-color: #0056b3;
         }
         #translationResult {
+            width: 100%;
+            padding: 10px;
             margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            font-size: 20px;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #5c2358;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
             font-size: 18px;
-            color: #333;
+        }
+        footer a {
+            color: #fff;
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Translator App</h1>
-        <textarea id="textInput" placeholder="Enter text to translate"></textarea>
+        <h1>Multi-modal Translation w/ Cloudflare</h1>
         <textarea id="langInput" placeholder="Enter target language (e.g., 'es' for Spanish)"></textarea>
+        <textarea id="textInput" placeholder="Enter text to translate or click Record Voice"></textarea>
         <button id="translateButton">Translate</button>
         <button id="recordButton">Record Voice</button>
         <div id = "translationResult"></div>
@@ -111,5 +144,8 @@
             recognition.start();
         }
     </script>
+    <footer>
+        <p>Built w/ 🧡 in SF🌁 on <a href="https://workers.cloudflare.com/" target="_blank">Cloudflare Workers</a> with <a href="https://ai.cloudflare.com" target="_blank">Workers AI</a>👩🏻‍💻 ➡️ <a href="https://github.com/elizabethsiegle/cfworkers-ai-translate" target="_blank">code</a></p>
+    </footer>
 </body>
 </html>
